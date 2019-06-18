@@ -1,0 +1,52 @@
+cat README.forensic-setup
+sudo apt update && sudo apt upgrade -Y
+sudo apt install autopsy sleuthkit openssh-server net-tools build-essential git
+
+# python stuff
+sudo apt install python3-pip virtualenvwrapper virtualenv
+mkdir python-packages ; cd python-packages
+virtualenv -p /usr/bin/python3.6 venv
+source venv/bin/activate
+pip install python-pypi-mirror
+
+pypi-mirror -d downloads download requests
+pypi-mirror -d downloads create -m mirror
+
+python3 -m http.server
+pip install -i http://127.0.0.1:8000/mirror requests
+
+sudo snap install pycharm-community --classic
+Start up pycharm-community, choose Darcula, bash-support, markdown
+Add other plugins as needed: Makefile, Docker
+
+# NFS server and client
+sudo apt install nfs-common nfs-kernel-server
+
+exports file: /mnt/shared subnet/24(rw,sync,no_subtree_check)
+mkdir /mnt/shared ; chown nobody:nogroup /mnt/shared ; chmod 777 /mnt/shared
+
+client: mkdir /mnt/shared-folder 
+sudo mount server-ip:/mnt/shared /mnt/shared-folder
+
+# Download some open source git packages
+git clone https://github.com/sirdavos19/ubuntu
+git clone https://github.com/NSA/ghidra
+git clone https://github.com/mitre/thumbtack
+
+Additional stuff
+
+sudo apt install gnome-tweaks
+sudo apt install vagrant
+sudo apt install docker-ce (or docker.io)
+
+sudo visudo to give 'user' NOPASSWD: sudo capability
+Add following line to /etc/sudoers:
+user	ALL=(ALL:ALL)NOPASSWD: ALL
+
+Tweaks
+Add Home, Network Servers button.  Default 14 (from 13) size font, Top Bar Date on.
+
+Thumbtack Additions
+XFS: sudo apt install xfsprogs ntfs-3g vmfs-tools squashfs-tools mtd-tools 
+sudo apt install xmount
+Use 'imount check'
